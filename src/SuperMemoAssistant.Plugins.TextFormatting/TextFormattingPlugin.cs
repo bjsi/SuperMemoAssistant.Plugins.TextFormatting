@@ -91,14 +91,36 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
         HotKeyScopes.SMBrowser,
         new HotKey(Key.OemMinus, KeyModifiers.CtrlAltShift),
         ToggleStrikethrough
-        );
+     )
+     .RegisterGlobal(
+        "FormatTextJustifyCenter",
+        "Center justify the currently selected text",
+        HotKeyScopes.SMBrowser,
+        new HotKey(Key.OemPipe, KeyModifiers.CtrlAltShift),
+        JustifyCenter
+     )
+     .RegisterGlobal(
+        "FormatTextIndent",
+        "Indent the currently selected text",
+        HotKeyScopes.SMBrowser,
+        new HotKey(Key.Right, KeyModifiers.CtrlAltShift),
+        Indent
+     )
+     .RegisterGlobal(
+        "FormatTextOutdent",
+        "Outdent the currently selected text",
+        HotKeyScopes.SMBrowser,
+        new HotKey(Key.Left, KeyModifiers.CtrlAltShift),
+        Outdent
+     );
 
     }
 
+    private void Outdent() => Commands.ExecuteCommandHtmlDoc(HtmlCommand.Outdent, null);
+    private void Indent() => Commands.ExecuteCommandHtmlDoc(HtmlCommand.Indent, null);
+    private void JustifyCenter() => Commands.ExecuteCommandHtmlDoc(HtmlCommand.JustifyCenter, null);
     private void ToggleSuperscript() => Commands.ExecuteCommandHtmlDoc(HtmlCommand.Superscript, null);
-
     private void ToggleSubscript() => Commands.ExecuteCommandHtmlDoc(HtmlCommand.Subscript, null);
-
     private void ToggleStrikethrough() => Commands.ExecuteCommandHtmlDoc(HtmlCommand.StrikeThrough, null);
 
     #endregion

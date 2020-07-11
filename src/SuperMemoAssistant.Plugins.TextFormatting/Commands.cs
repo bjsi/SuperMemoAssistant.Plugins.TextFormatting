@@ -56,7 +56,7 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
     /// Executes the execCommand on the selected document.
     /// Only affects the currently selected range.
     /// </summary>
-    public static void ExecuteCommandHtmlDoc(HtmlCommand command, object data)
+    public static void Execute(HtmlCommand command, object data)
     {
 
       var htmlDoc = ContentUtils.GetFocusedHtmlDoc();
@@ -90,6 +90,7 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
 
       }
       catch (RemotingException) { }
+      catch (UnauthorizedAccessException) { }
 
     } 
   }

@@ -81,101 +81,232 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
       ConfigurationWindow.ShowAndActivate(HotKeyManager.Instance, Config);
     }
 
+    private void RegisterDummyHotkeys()
+    {
+
+      // SUPERSCRIPT
+      Svc.HotKeyManager
+     .RegisterGlobal(
+        "FormatTextSuperscript",
+        "Superscript",
+        HotKeyScopes.SMBrowser,
+        new HotKey(Key.DbeAlphanumeric),
+        ToggleSuperscript
+      )
+
+     // SUBSCRIPT
+     .RegisterGlobal(
+        "FormatTextSubscript",
+        "Subscript",
+        HotKeyScopes.SMBrowser,
+        new HotKey(Key.DbeCodeInput),
+        ToggleSubscript
+     )
+     
+     // STRIKETHROUGH
+     .RegisterGlobal(
+        "FormatTextStrikethrough",
+        "Strikethrough",
+        HotKeyScopes.SMBrowser,
+        new HotKey(Key.DbeDbcsChar),
+        ToggleStrikethrough
+     )
+
+     // JUSTIFY CENTER
+     .RegisterGlobal(
+        "FormatTextJustifyCenter",
+        "Justify Center",
+        HotKeyScopes.SMBrowser,
+        new HotKey(Key.DbeEnterDialogConversionMode),
+        JustifyCenter
+     )
+
+     // INDENT
+     .RegisterGlobal(
+        "FormatTextIndent",
+        "Indent",
+        HotKeyScopes.SMBrowser,
+        new HotKey(Key.DbeEnterImeConfigureMode),
+        Indent
+     )
+
+     // OUTDENT
+     .RegisterGlobal(
+        "FormatTextOutdent",
+        "Outdent",
+        HotKeyScopes.SMBrowser,
+        new HotKey(Key.DbeEnterWordRegisterMode),
+        Outdent
+     )
+
+     // INSERT LINE
+     .RegisterGlobal(
+        "FormatTextInsertLine",
+        "Insert Horizontal Line",
+        HotKeyScopes.SMBrowser,
+        new HotKey(Key.DbeFlushString),
+        InsertHorizontalRule
+     )
+
+     // JUSTIFY RIGHT
+     .RegisterGlobal(
+        "FormatTextJustifyRight",
+        "Justify Right",
+        HotKeyScopes.SMBrowser,
+        new HotKey(Key.DbeHiragana),
+        JustifyRight
+     )
+
+     // JUSTIFY LEFT
+     .RegisterGlobal(
+        "FormatTextJustifyLeft",
+        "Justify Left",
+        HotKeyScopes.SMBrowser,
+        new HotKey(Key.DbeKatakana),
+        JustifyLeft
+     )
+
+     // JUSTIFY FULL
+     .RegisterGlobal(
+        "FormatTextJustifyFull",
+        "Justify Full",
+        HotKeyScopes.SMBrowser,
+        new HotKey(Key.DbeNoCodeInput),
+        JustifyRight
+      );
+
+    }
+
+    private void AddOptionalServiceIntegrations()
+    {
+
+      var svc = GetService<IDevContextMenu>();
+      if (svc.IsNull())
+        return;
+
+      // OUTDENT
+      if (Config.AddOutdentMenuItem)
+      {
+
+        if (svc.AddMenuItem(Name, "Outdent", new ActionProxy(Outdent)))
+          LogTo.Debug("Successfully added Outdent command to Dev Context Menu");
+        else
+          LogTo.Warning("Failed to add Outdent command to Dev Context Menu");
+
+      }
+
+      // INDENT
+      if (Config.AddIndentMenuItem)
+      {
+
+        if (svc.AddMenuItem(Name, "Indent", new ActionProxy(Indent)))
+          LogTo.Debug("Successfully added Indent command to Dev Context Menu");
+        else
+          LogTo.Warning("Failed to add Indent command to Dev Context Menu");
+
+      }
+
+      // JUSTIFY CENTER
+      if (Config.AddJustifyCenterMenuItem)
+      {
+
+        if (svc.AddMenuItem(Name, "Justify Center", new ActionProxy(JustifyCenter)))
+          LogTo.Debug("Successfully added Justify Center command to Dev Context Menu");
+        else
+          LogTo.Warning("Failed to add Justify Center command to Dev Context Menu");
+
+      }
+
+      // SUPERSCRIPT
+      if (Config.AddSuperscriptMenuItem)
+      {
+
+        if (svc.AddMenuItem(Name, "Superscript", new ActionProxy(ToggleSuperscript)))
+          LogTo.Debug("Successfully added Superscript command to Dev Context Menu");
+        else
+          LogTo.Warning("Failed to add Superscript command to Dev Context Menu");
+
+      }
+
+      // SUBSCRIPT
+      if (Config.AddSubscriptMenuItem)
+      {
+
+        if (svc.AddMenuItem(Name, "Subscript", new ActionProxy(ToggleSubscript)))
+          LogTo.Debug("Successfully added Subscript command to Dev Context Menu");
+        else
+          LogTo.Warning("Failed to add Subscript command to Dev Context Menu");
+
+      }
+
+
+      // STRIKETHROUGH
+      if (Config.AddStrikethroughMenuItem)
+      {
+
+        if (svc.AddMenuItem(Name, "Strikethrough", new ActionProxy(ToggleStrikethrough)))
+          LogTo.Debug("Successfully added Strikethrough command to Dev Context Menu");
+        else
+          LogTo.Warning("Failed to add Strikethrough command to Dev Context Menu");
+
+      }
+        
+
+      // INSERT LINE
+      if (Config.AddInsertLineMenuItem)
+      {
+
+        if (svc.AddMenuItem(Name, "Insert Line", new ActionProxy(InsertHorizontalRule)))
+          LogTo.Debug("Successfully added Insert Line command to Dev Context Menu");
+        else
+          LogTo.Warning("Failed to add Insert Line command to Dev Context Menu");
+
+      }
+
+      // JUSTIFY RIGHT
+      if (Config.AddJustifyRightMenuItem)
+      {
+
+        if (svc.AddMenuItem(Name, "Justify Right", new ActionProxy(JustifyRight)))
+          LogTo.Debug("Successfully added Justify Right command to Dev Context Menu");
+        else
+          LogTo.Warning("Failed to add Justify Right command to Dev Context Menu");
+
+      }
+        
+
+      // JUSTIFY LEFT
+      if (Config.AddJustifyLeftMenuItem)
+      {
+
+        if (svc.AddMenuItem(Name, "Justify Left", new ActionProxy(JustifyLeft)))
+          LogTo.Debug("Successfully added Justify Left command to Dev Context Menu");
+        else
+          LogTo.Warning("Failed to add Justify Left command to Dev Context Menu");
+
+      }
+
+      // JUSTIFY RIGHT
+      if (Config.AddJustifyFullMenuItem)
+      {
+
+        if (svc.AddMenuItem(Name, "Justify Full",  new ActionProxy(JustifyFull)))
+          LogTo.Debug("Successfully added Justify Full command to Dev Context Menu");
+        else
+          LogTo.Warning("Failed to add Justify Full command to Dev Context Menu");
+
+      }
+    }
+
     /// <inheritdoc />
     protected override void PluginInit()
     {
 
       LoadConfig();
 
-      Svc.HotKeyManager
-     .RegisterGlobal(
-        "FormatTextSuperscript",
-        "Make the currently selected text superscript",
-        HotKeyScopes.SMBrowser,
-        new HotKey(Key.DbeAlphanumeric),
-        ToggleSuperscript
-      )
-     .RegisterGlobal(
-        "FormatTextSubscript",
-        "Make the currently selected text subscript",
-        HotKeyScopes.SMBrowser,
-        new HotKey(Key.DbeCodeInput),
-        ToggleSubscript
-     )
-     .RegisterGlobal(
-        "FormatTextStrikethrough",
-        "Make the currently selected text strikethrough",
-        HotKeyScopes.SMBrowser,
-        new HotKey(Key.DbeDbcsChar),
-        ToggleStrikethrough
-     )
-     .RegisterGlobal(
-        "FormatTextJustifyCenter",
-        "Center justify the currently selected text",
-        HotKeyScopes.SMBrowser,
-        new HotKey(Key.DbeEnterDialogConversionMode),
-        JustifyCenter
-     )
-     .RegisterGlobal(
-        "FormatTextIndent",
-        "Indent the currently selected text",
-        HotKeyScopes.SMBrowser,
-        new HotKey(Key.DbeEnterImeConfigureMode),
-        Indent
-     )
-     .RegisterGlobal(
-        "FormatTextOutdent",
-        "Outdent the currently selected text",
-        HotKeyScopes.SMBrowser,
-        new HotKey(Key.DbeEnterWordRegisterMode),
-        Outdent
-     )
-     .RegisterGlobal(
-        "FormatTextInsertLine",
-        "Insert a horizontal rule",
-        HotKeyScopes.SMBrowser,
-        new HotKey(Key.DbeFlushString),
-        InsertHorizontalRule
-     )
-     .RegisterGlobal(
-        "FormatTextJustifyRight",
-        "Justify the currently selected text to the right",
-        HotKeyScopes.SMBrowser,
-        new HotKey(Key.DbeHiragana),
-        JustifyRight
-     )
-     .RegisterGlobal(
-        "FormatTextJustifyLeft",
-        "Justify the currently selected text to the left",
-        HotKeyScopes.SMBrowser,
-        new HotKey(Key.DbeKatakana),
-        JustifyLeft
-     )
-     .RegisterGlobal(
-        "FormatTextJustifyFull",
-        "Fully justify the currently selecte text",
-        HotKeyScopes.SMBrowser,
-        new HotKey(Key.DbeNoCodeInput),
-        JustifyRight
-      );
+      RegisterDummyHotkeys();
 
-      if (!Config.AddToContextMenu)
-        return;
-
-      var svc = GetService<IDevContextMenu>();
-      if (svc.IsNull())
-        return;
-
-      svc.AddMenuItem(Name, "Outdent",              new ActionProxy(Outdent));
-      svc.AddMenuItem(Name, "Indent",               new ActionProxy(Indent));
-      svc.AddMenuItem(Name, "Justify Center",       new ActionProxy(JustifyCenter));
-      svc.AddMenuItem(Name, "Toggle Superscript",   new ActionProxy(ToggleSuperscript));
-      svc.AddMenuItem(Name, "Toggle Subscript",     new ActionProxy(ToggleSubscript));
-      svc.AddMenuItem(Name, "Toggle Strikethrough", new ActionProxy(ToggleStrikethrough));
-      svc.AddMenuItem(Name, "Insert Line",          new ActionProxy(InsertHorizontalRule));
-      svc.AddMenuItem(Name, "Justify Right",        new ActionProxy(JustifyRight));
-      svc.AddMenuItem(Name, "Justify Left",         new ActionProxy(JustifyLeft));
-      svc.AddMenuItem(Name, "Justify Full",         new ActionProxy(JustifyFull));
+      AddOptionalServiceIntegrations();
 
     }
 

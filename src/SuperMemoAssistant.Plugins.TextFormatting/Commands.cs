@@ -99,7 +99,7 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
 
       var htmlDoc = ContentUtils.GetFocusedHtmlDoc();
       if (!htmlDoc.IsNull())
-        QueryValueHtmlDoc(htmlDoc, command, data);
+        QueryValueHtmlDoc(htmlDoc, command);
 
     }
 

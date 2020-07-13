@@ -56,7 +56,7 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
     /// Executes the execCommand on the selected document.
     /// Only affects the currently selected range.
     /// </summary>
-    public static void Execute(HtmlCommand command, object data)
+    public static void ExecuteCommand(HtmlCommand command, object data)
     {
 
       var htmlDoc = ContentUtils.GetFocusedHtmlDoc();
@@ -92,6 +92,43 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
       catch (RemotingException) { }
       catch (UnauthorizedAccessException) { }
 
-    } 
+    }
+
+    public static void ExecuteQuery(HtmlCommand command)
+    {
+
+      var htmlDoc = ContentUtils.GetFocusedHtmlDoc();
+      if (!htmlDoc.IsNull())
+        QueryValueHtmlDoc(htmlDoc, command, data);
+
+    }
+
+
+    [LogToErrorOnException]
+    public static object QueryValueHtmlDoc(IHTMLDocument2 htmlDoc, HtmlCommand command) 
+    { 
+      try
+      {
+
+        if (htmlDoc.IsNull())
+          return null;
+
+        // ensure command is valid and enabled
+        if (!htmlDoc.queryCommandSupported(command.Name()))
+          return null;
+
+        if (!htmlDoc.queryCommandEnabled(command.Name()))
+          return null;
+
+        return htmlDoc.queryCommandValue(command.Name());
+
+      }
+      catch (RemotingException) { }
+      catch (UnauthorizedAccessException) { }
+
+      return null;
+
+    }
+
   }
 }

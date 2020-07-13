@@ -310,16 +310,16 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
 
     }
 
-    private void Outdent() => Commands.Execute(HtmlCommand.Outdent, null);
-    private void Indent() => Commands.Execute(HtmlCommand.Indent, null);
-    private void JustifyCenter() => Commands.Execute(HtmlCommand.JustifyCenter, null);
-    private void ToggleSuperscript() => Commands.Execute(HtmlCommand.Superscript, null);
-    private void ToggleSubscript() => Commands.Execute(HtmlCommand.Subscript, null);
-    private void ToggleStrikethrough() => Commands.Execute(HtmlCommand.StrikeThrough, null);
-    private void InsertHorizontalRule() => Commands.Execute(HtmlCommand.InsertHorizontalRule, null);
-    private void JustifyRight() => Commands.Execute(HtmlCommand.JustifyRight, null);
-    private void JustifyLeft() => Commands.Execute(HtmlCommand.JustifyRight, null);
-    private void JustifyFull() => Commands.Execute(HtmlCommand.JustifyRight, null);
+    private void Outdent() => Commands.ExecuteCommand(HtmlCommand.Outdent, null);
+    private void Indent() => Commands.ExecuteCommand(HtmlCommand.Indent, null);
+    private void JustifyCenter() => Commands.ExecuteCommand(HtmlCommand.JustifyCenter, null);
+    private void ToggleSuperscript() => Commands.ExecuteCommand(HtmlCommand.Superscript, null);
+    private void ToggleSubscript() => Commands.ExecuteCommand(HtmlCommand.Subscript, null);
+    private void ToggleStrikethrough() => Commands.ExecuteCommand(HtmlCommand.StrikeThrough, null);
+    private void InsertHorizontalRule() => Commands.ExecuteCommand(HtmlCommand.InsertHorizontalRule, null);
+    private void JustifyRight() => Commands.ExecuteCommand(HtmlCommand.JustifyRight, null);
+    private void JustifyLeft() => Commands.ExecuteCommand(HtmlCommand.JustifyRight, null);
+    private void JustifyFull() => Commands.ExecuteCommand(HtmlCommand.JustifyRight, null);
 
     #endregion
 

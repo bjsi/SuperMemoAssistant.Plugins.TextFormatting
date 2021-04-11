@@ -1,4 +1,16 @@
-﻿#region License & Metadata
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
+using HtmlAgilityPack;
+using SuperMemoAssistant.Services;
+using SuperMemoAssistant.Services.IO.HotKeys;
+using SuperMemoAssistant.Services.IO.Keyboard;
+using SuperMemoAssistant.Services.Sentry;
+using SuperMemoAssistant.Services.UI.Configuration;
+using SuperMemoAssistant.Sys.IO.Devices;
+
+#region License & Metadata
 
 // The MIT License (MIT)
 // 
@@ -31,21 +43,6 @@
 
 namespace SuperMemoAssistant.Plugins.TextFormatting
 {
-  using System;
-  using System.Diagnostics.CodeAnalysis;
-  using System.Runtime.Remoting;
-  using System.Windows.Input;
-  using Anotar.Serilog;
-  using mshtml;
-  using SuperMemoAssistant.Plugins.DevContextMenu.Interop;
-  using SuperMemoAssistant.Services;
-  using SuperMemoAssistant.Services.IO.HotKeys;
-  using SuperMemoAssistant.Services.IO.Keyboard;
-  using SuperMemoAssistant.Services.Sentry;
-  using SuperMemoAssistant.Services.UI.Configuration;
-  using SuperMemoAssistant.Sys.IO.Devices;
-  using SuperMemoAssistant.Sys.Remoting;
-
   // ReSharper disable once UnusedMember.Global
   // ReSharper disable once ClassNeverInstantiated.Global
   [SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces")]
@@ -65,15 +62,15 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
 
     /// <inheritdoc />
     public override bool HasSettings => true;
-    public TextFormattingCfg Config;
+    public TextFormattingCfg Config { get; set; }
 
     #endregion
 
     #region Methods Impl
 
-    private void LoadConfig()
+    private async Task LoadConfig()
     {
-      Config = Svc.Configuration.Load<TextFormattingCfg>() ?? new TextFormattingCfg();
+      Config = await Svc.Configuration.Load<TextFormattingCfg>().ConfigureAwait(false) ?? new TextFormattingCfg();
     }
 
     public override void ShowSettings()
@@ -89,7 +86,7 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
      .RegisterGlobal(
         "FormatTextSuperscript",
         "Superscript",
-        HotKeyScopes.SMBrowser,
+        HotKeyScope.SMBrowser,
         new HotKey(Key.DbeAlphanumeric),
         ToggleSuperscript
       )
@@ -98,16 +95,16 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
      .RegisterGlobal(
         "FormatTextSubscript",
         "Subscript",
-        HotKeyScopes.SMBrowser,
+        HotKeyScope.SMBrowser,
         new HotKey(Key.DbeCodeInput),
         ToggleSubscript
      )
-     
+
      // STRIKETHROUGH
      .RegisterGlobal(
         "FormatTextStrikethrough",
         "Strikethrough",
-        HotKeyScopes.SMBrowser,
+        HotKeyScope.SMBrowser,
         new HotKey(Key.DbeDbcsChar),
         ToggleStrikethrough
      )
@@ -116,7 +113,7 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
      .RegisterGlobal(
         "FormatTextJustifyCenter",
         "Justify Center",
-        HotKeyScopes.SMBrowser,
+        HotKeyScope.SMBrowser,
         new HotKey(Key.DbeEnterDialogConversionMode),
         JustifyCenter
      )
@@ -125,7 +122,7 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
      .RegisterGlobal(
         "FormatTextIndent",
         "Indent",
-        HotKeyScopes.SMBrowser,
+        HotKeyScope.SMBrowser,
         new HotKey(Key.DbeEnterImeConfigureMode),
         Indent
      )
@@ -134,7 +131,7 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
      .RegisterGlobal(
         "FormatTextOutdent",
         "Outdent",
-        HotKeyScopes.SMBrowser,
+        HotKeyScope.SMBrowser,
         new HotKey(Key.DbeEnterWordRegisterMode),
         Outdent
      )
@@ -143,7 +140,7 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
      .RegisterGlobal(
         "FormatTextInsertLine",
         "Insert Horizontal Line",
-        HotKeyScopes.SMBrowser,
+        HotKeyScope.SMBrowser,
         new HotKey(Key.DbeFlushString),
         InsertHorizontalRule
      )
@@ -152,7 +149,7 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
      .RegisterGlobal(
         "FormatTextJustifyRight",
         "Justify Right",
-        HotKeyScopes.SMBrowser,
+        HotKeyScope.SMBrowser,
         new HotKey(Key.DbeHiragana),
         JustifyRight
      )
@@ -161,7 +158,7 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
      .RegisterGlobal(
         "FormatTextJustifyLeft",
         "Justify Left",
-        HotKeyScopes.SMBrowser,
+        HotKeyScope.SMBrowser,
         new HotKey(Key.DbeKatakana),
         JustifyLeft
      )
@@ -170,144 +167,42 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
      .RegisterGlobal(
         "FormatTextJustifyFull",
         "Justify Full",
-        HotKeyScopes.SMBrowser,
+        HotKeyScope.SMBrowser,
         new HotKey(Key.DbeNoCodeInput),
-        JustifyRight
-      );
+        JustifyFull
+      )
 
-    }
+     // Paste Plain Text
+     .RegisterGlobal(
+        "PastePlainText",
+        "Paste Plain Text",
+        HotKeyScope.SMBrowser,
+        new HotKey(Key.V, KeyModifiers.CtrlShift),
+        PastePlainText
+     )
 
-    private void AddOptionalServiceIntegrations()
-    {
+     .RegisterGlobal(
+        "IncreseFontSize",
+        "Increase Selected Text Font Size",
+        HotKeyScope.SMBrowser,
+        new HotKey(Key.OemPlus, KeyModifiers.CtrlAltShift),
+        IncreaseFontSizeOfSelected
+        )
 
-      var svc = GetService<IDevContextMenu>();
-      if (svc.IsNull())
-        return;
-
-      // OUTDENT
-      if (Config.AddOutdentMenuItem)
-      {
-
-        if (svc.AddMenuItem(Name, "Outdent", new ActionProxy(Outdent)))
-          LogTo.Debug("Successfully added Outdent command to Dev Context Menu");
-        else
-          LogTo.Warning("Failed to add Outdent command to Dev Context Menu");
-
-      }
-
-      // INDENT
-      if (Config.AddIndentMenuItem)
-      {
-
-        if (svc.AddMenuItem(Name, "Indent", new ActionProxy(Indent)))
-          LogTo.Debug("Successfully added Indent command to Dev Context Menu");
-        else
-          LogTo.Warning("Failed to add Indent command to Dev Context Menu");
-
-      }
-
-      // JUSTIFY CENTER
-      if (Config.AddJustifyCenterMenuItem)
-      {
-
-        if (svc.AddMenuItem(Name, "Justify Center", new ActionProxy(JustifyCenter)))
-          LogTo.Debug("Successfully added Justify Center command to Dev Context Menu");
-        else
-          LogTo.Warning("Failed to add Justify Center command to Dev Context Menu");
-
-      }
-
-      // SUPERSCRIPT
-      if (Config.AddSuperscriptMenuItem)
-      {
-
-        if (svc.AddMenuItem(Name, "Superscript", new ActionProxy(ToggleSuperscript)))
-          LogTo.Debug("Successfully added Superscript command to Dev Context Menu");
-        else
-          LogTo.Warning("Failed to add Superscript command to Dev Context Menu");
-
-      }
-
-      // SUBSCRIPT
-      if (Config.AddSubscriptMenuItem)
-      {
-
-        if (svc.AddMenuItem(Name, "Subscript", new ActionProxy(ToggleSubscript)))
-          LogTo.Debug("Successfully added Subscript command to Dev Context Menu");
-        else
-          LogTo.Warning("Failed to add Subscript command to Dev Context Menu");
-
-      }
-
-
-      // STRIKETHROUGH
-      if (Config.AddStrikethroughMenuItem)
-      {
-
-        if (svc.AddMenuItem(Name, "Strikethrough", new ActionProxy(ToggleStrikethrough)))
-          LogTo.Debug("Successfully added Strikethrough command to Dev Context Menu");
-        else
-          LogTo.Warning("Failed to add Strikethrough command to Dev Context Menu");
-
-      }
-        
-
-      // INSERT LINE
-      if (Config.AddInsertLineMenuItem)
-      {
-
-        if (svc.AddMenuItem(Name, "Insert Line", new ActionProxy(InsertHorizontalRule)))
-          LogTo.Debug("Successfully added Insert Line command to Dev Context Menu");
-        else
-          LogTo.Warning("Failed to add Insert Line command to Dev Context Menu");
-
-      }
-
-      // JUSTIFY RIGHT
-      if (Config.AddJustifyRightMenuItem)
-      {
-
-        if (svc.AddMenuItem(Name, "Justify Right", new ActionProxy(JustifyRight)))
-          LogTo.Debug("Successfully added Justify Right command to Dev Context Menu");
-        else
-          LogTo.Warning("Failed to add Justify Right command to Dev Context Menu");
-
-      }
-        
-
-      // JUSTIFY LEFT
-      if (Config.AddJustifyLeftMenuItem)
-      {
-
-        if (svc.AddMenuItem(Name, "Justify Left", new ActionProxy(JustifyLeft)))
-          LogTo.Debug("Successfully added Justify Left command to Dev Context Menu");
-        else
-          LogTo.Warning("Failed to add Justify Left command to Dev Context Menu");
-
-      }
-
-      // JUSTIFY RIGHT
-      if (Config.AddJustifyFullMenuItem)
-      {
-
-        if (svc.AddMenuItem(Name, "Justify Full",  new ActionProxy(JustifyFull)))
-          LogTo.Debug("Successfully added Justify Full command to Dev Context Menu");
-        else
-          LogTo.Warning("Failed to add Justify Full command to Dev Context Menu");
-
-      }
+     .RegisterGlobal(
+        "DecreaseFontSize",
+        "Decrease Selected Text Font Size",
+        HotKeyScope.SMBrowser,
+        new HotKey(Key.OemMinus, KeyModifiers.CtrlAltShift),
+        DecreaseFontSizeOfSelected
+        );
     }
 
     /// <inheritdoc />
     protected override void PluginInit()
     {
-
-      LoadConfig();
-
+      LoadConfig().Wait();
       RegisterDummyHotkeys();
-
-      AddOptionalServiceIntegrations();
-
     }
 
     private void Outdent() => Commands.ExecuteCommand(HtmlCommand.Outdent, null);
@@ -320,6 +215,41 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
     private void JustifyRight() => Commands.ExecuteCommand(HtmlCommand.JustifyRight, null);
     private void JustifyLeft() => Commands.ExecuteCommand(HtmlCommand.JustifyRight, null);
     private void JustifyFull() => Commands.ExecuteCommand(HtmlCommand.JustifyRight, null);
+
+    private void PastePlainText()
+    {
+      Application.Current.Dispatcher.Invoke(() =>
+      {
+        string text = Clipboard.GetText();
+        string plain = CleanHtml(text);
+        if (!string.IsNullOrEmpty(plain))
+        {
+          Clipboard.SetData(DataFormats.Text, plain);
+          Commands.ExecuteCommand(HtmlCommand.Paste, null);
+        }
+      });
+    }
+
+    private void IncreaseFontSizeOfSelected()
+    {
+      var size = Commands.ExecuteQuery(HtmlCommand.FontSize);
+      if (size is int number)
+        Commands.ExecuteCommand(HtmlCommand.FontSize, number + Config.FontSizeChangeInterval);
+    }
+
+    private void DecreaseFontSizeOfSelected()
+    {
+      var size = Commands.ExecuteQuery(HtmlCommand.FontSize);
+      if (size is int number && number > 1)
+        Commands.ExecuteCommand(HtmlCommand.FontSize, number - Config.FontSizeChangeInterval);
+    }
+
+    private string CleanHtml(string text)
+    {
+      var doc = new HtmlDocument();
+      doc.LoadHtml(text);
+      return doc.DocumentNode.InnerText;
+    }
 
     #endregion
 

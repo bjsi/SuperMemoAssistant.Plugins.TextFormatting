@@ -2,11 +2,7 @@
 using mshtml;
 using SuperMemoAssistant.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Remoting;
-using System.Text;
-using System.Threading.Tasks;
 
 
 // Loosely based on: https://github.com/aAmitSengar/WindowsEditor/blob/master/Eq2ImgWinForms/WinHtmlEditor/HtmlEditor.cs 
@@ -75,7 +71,6 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
 
       try
       {
-
         if (htmlDoc.IsNull())
           return;
 
@@ -94,12 +89,14 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
 
     }
 
-    public static void ExecuteQuery(HtmlCommand command)
+    public static object ExecuteQuery(HtmlCommand command)
     {
 
       var htmlDoc = ContentUtils.GetFocusedHtmlDoc();
       if (!htmlDoc.IsNull())
-        QueryValueHtmlDoc(htmlDoc, command);
+        return QueryValueHtmlDoc(htmlDoc, command);
+
+      return null;
 
     }
 
@@ -129,6 +126,5 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
       return null;
 
     }
-
   }
 }

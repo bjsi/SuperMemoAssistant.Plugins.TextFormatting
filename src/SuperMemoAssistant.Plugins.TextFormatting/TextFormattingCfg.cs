@@ -1,13 +1,11 @@
-﻿using Forge.Forms.Annotations;
+﻿using Forge.Forms;
+using Forge.Forms.Annotations;
 using Newtonsoft.Json;
 using SuperMemoAssistant.Services.UI.Configuration;
 using SuperMemoAssistant.Sys.ComponentModel;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace SuperMemoAssistant.Plugins.TextFormatting
 {
@@ -26,52 +24,26 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
     [Title("Text Formatting Plugin")]
     [Heading("By Jamesb | Experimental Learning")]
 
-    [Heading("Features:")]
-    [Text(@"- Bind common text formatting operations to hotkeys.
-- Integrates with other plugins, such as Dev Context Menu.")]
+    [Heading("Features")]
+    [Text(@"- Enables you to assign hotkeys to commmon text formatting operations.")]
 
-    [Heading("Plugin Integration Settings")]
-    [Heading("DevContextMenu")]
+    [Heading("Support")]
+    [Text("If you would like to support my projects, check out my Patreon or buy me a coffee.")]
 
-    // OUTDENT
-    [Field(Name = "Add Outdent command to Dev Context Menu?")]
-    public bool AddOutdentMenuItem { get; set; } = true;
+    [Action("patreon", "Patreon", Placement = Placement.Before, LinePosition = Position.Left)]
+    [Action("coffee", "Coffee", Placement = Placement.Before, LinePosition = Position.Left)]
 
-    // INDENT
-    [Field(Name = "Add Indent command to Dev Context Menu?")]
-    public bool AddIndentMenuItem { get; set; } = true;
+    [Heading("Links")]
+    [Action("github", "GitHub", Placement = Placement.Before, LinePosition = Position.Left)]
+    [Action("feedback", "Feedback Site", Placement = Placement.Before, LinePosition = Position.Left)]
+    [Action("blog", "Blog", Placement = Placement.Before, LinePosition = Position.Left)]
+    [Action("youtube", "YouTube", Placement = Placement.Before, LinePosition = Position.Left)]
+    [Action("twitter", "Twitter", Placement = Placement.Before, LinePosition = Position.Left)]
 
-    // JUSTIFY CENTER
-    [Field(Name = "Add Justify Center command to Dev Context Menu?")]
-    public bool AddJustifyCenterMenuItem { get; set; } = true;
+    [Heading("Settings")]
 
-    // JUSTIFY LEFT
-    [Field(Name = "Add Justify Left command to Dev Context Menu?")]
-    public bool AddJustifyLeftMenuItem { get; set; } = true;
-
-    // JUSTIFY RIGHT
-    [Field(Name = "Add Justify Right command to Dev Context Menu?")]
-    public bool AddJustifyRightMenuItem { get; set; } = true;
-
-    // JUSTIFY FULL
-    [Field(Name = "Add Justify Full command to Dev Context Menu?")]
-    public bool AddJustifyFullMenuItem { get; set; } = true;
-
-    // SUPERSCRIPT
-    [Field(Name = "Add Superscript command to Dev Context Menu?")]
-    public bool AddSuperscriptMenuItem { get; set; } = true;
-
-    // SUBSCRIPT
-    [Field(Name = "Add Subscript command to Dev Context Menu?")]
-    public bool AddSubscriptMenuItem { get; set; } = true;
-
-    // INSERT LINE
-    [Field(Name = "Add Insert Line command to Dev Context Menu?")]
-    public bool AddInsertLineMenuItem { get; set; } = true;
-
-    // STRIKETHROUGH
-    [Field(Name = "Add Strikethrough command to Dev Context Menu?")]
-    public bool AddStrikethroughMenuItem { get; set; } = true;
+    [Field(Name = "Font size increase and decrease interval")]
+    public int FontSizeChangeInterval { get; set; } = 1;
 
     [JsonIgnore]
     public bool IsChanged { get; set; }
@@ -79,6 +51,49 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
     public override string ToString()
     {
       return "Text Formatting Settings";
+    }
+
+    public override void HandleAction(IActionContext actionContext)
+    {
+
+      string patreon = "https://www.patreon.com/experimental_learning";
+      string coffee = "https://buymeacoffee.com/experilearning";
+      string github = "https://github.com/bjsi/SuperMemoAssistant.Plugins.HtmlTables";
+      string feedback = "https://feedback.experimental-learning.com/";
+      string youtube = "https://www.youtube.com/channel/UCIaS9XDdQkvIjASBfgim1Uw";
+      string twitter = "https://twitter.com/experilearning";
+      string blog = "https://www.experimental-learning.com/";
+
+      string action = actionContext.Action as string;
+      if (action == "patreon")
+        openLinkDefaultBrowser(patreon);
+      else if (action == "github")
+        openLinkDefaultBrowser(github);
+      else if (action == "coffee")
+        openLinkDefaultBrowser(coffee);
+      else if (action == "feedback")
+        openLinkDefaultBrowser(feedback);
+      else if (action == "youtube")
+        openLinkDefaultBrowser(youtube);
+      else if (action == "twitter")
+        openLinkDefaultBrowser(twitter);
+      else if (action == "blog")
+        openLinkDefaultBrowser(blog);
+      else
+        base.HandleAction(actionContext);
+    }
+
+    // Hack
+    private DateTime LastLinkOpen { get; set; } = DateTime.MinValue;
+
+    private void openLinkDefaultBrowser(string url)
+    {
+      var diffInSeconds = (DateTime.Now - LastLinkOpen).TotalSeconds;
+      if (diffInSeconds > 1)
+      {
+        LastLinkOpen = DateTime.Now;
+        Process.Start(url);
+      }
     }
 
     public event PropertyChangedEventHandler PropertyChanged;

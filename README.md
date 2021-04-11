@@ -22,12 +22,12 @@ There are 13 commands:
 2. Justify center.
 3. Insert Horizontal Line.
 4. Toggle subscript on selected text.
-5. Jusify left.
+5. Justify left.
 6. Toggle superscript on selected text.
 7. Justify right.
 8. Decrease size of selected text.
 9. Outdent.
-10. Jusify Full.
+10. Justify Full.
 11. Paste clipboard as plain text.
 12. Increase size of selected text.
 13. Indent.

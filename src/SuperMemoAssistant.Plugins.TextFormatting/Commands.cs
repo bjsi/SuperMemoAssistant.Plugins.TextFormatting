@@ -102,8 +102,8 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
 
 
     [LogToErrorOnException]
-    public static object QueryValueHtmlDoc(IHTMLDocument2 htmlDoc, HtmlCommand command) 
-    { 
+    public static object QueryValueHtmlDoc(IHTMLDocument2 htmlDoc, HtmlCommand command)
+    {
       try
       {
 

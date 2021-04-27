@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using HtmlAgilityPack;
@@ -51,7 +50,7 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
     #region Constructors
 
     /// <inheritdoc />
-    public TextFormattingPlugin() : base("Enter your Sentry.io api key (strongly recommended)") { }
+    public TextFormattingPlugin() : base("") { }
     #endregion
 
 
@@ -68,14 +67,14 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
 
     #region Methods Impl
 
-    private async Task LoadConfig()
+    private void LoadConfig()
     {
-      Config = await Svc.Configuration.Load<TextFormattingCfg>().ConfigureAwait(false) ?? new TextFormattingCfg();
+      Config = Svc.Configuration.Load<TextFormattingCfg>() ?? new TextFormattingCfg();
     }
 
     public override void ShowSettings()
     {
-      ConfigurationWindow.ShowAndActivate(HotKeyManager.Instance, Config);
+      ConfigurationWindow.ShowAndActivate("Text Formatting", HotKeyManager.Instance, Config);
     }
 
     private void RegisterDummyHotkeys()
@@ -86,7 +85,7 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
      .RegisterGlobal(
         "FormatTextSuperscript",
         "Superscript",
-        HotKeyScope.SMBrowser,
+        HotKeyScopes.SMBrowser,
         new HotKey(Key.DbeAlphanumeric),
         ToggleSuperscript
       )
@@ -95,7 +94,7 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
      .RegisterGlobal(
         "FormatTextSubscript",
         "Subscript",
-        HotKeyScope.SMBrowser,
+        HotKeyScopes.SMBrowser,
         new HotKey(Key.DbeCodeInput),
         ToggleSubscript
      )
@@ -104,7 +103,7 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
      .RegisterGlobal(
         "FormatTextStrikethrough",
         "Strikethrough",
-        HotKeyScope.SMBrowser,
+        HotKeyScopes.SMBrowser,
         new HotKey(Key.DbeDbcsChar),
         ToggleStrikethrough
      )
@@ -113,7 +112,7 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
      .RegisterGlobal(
         "FormatTextJustifyCenter",
         "Justify Center",
-        HotKeyScope.SMBrowser,
+        HotKeyScopes.SMBrowser,
         new HotKey(Key.DbeEnterDialogConversionMode),
         JustifyCenter
      )
@@ -122,7 +121,7 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
      .RegisterGlobal(
         "FormatTextIndent",
         "Indent",
-        HotKeyScope.SMBrowser,
+        HotKeyScopes.SMBrowser,
         new HotKey(Key.DbeEnterImeConfigureMode),
         Indent
      )
@@ -131,7 +130,7 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
      .RegisterGlobal(
         "FormatTextOutdent",
         "Outdent",
-        HotKeyScope.SMBrowser,
+        HotKeyScopes.SMBrowser,
         new HotKey(Key.DbeEnterWordRegisterMode),
         Outdent
      )
@@ -140,7 +139,7 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
      .RegisterGlobal(
         "FormatTextInsertLine",
         "Insert Horizontal Line",
-        HotKeyScope.SMBrowser,
+        HotKeyScopes.SMBrowser,
         new HotKey(Key.DbeFlushString),
         InsertHorizontalRule
      )
@@ -149,7 +148,7 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
      .RegisterGlobal(
         "FormatTextJustifyRight",
         "Justify Right",
-        HotKeyScope.SMBrowser,
+        HotKeyScopes.SMBrowser,
         new HotKey(Key.DbeHiragana),
         JustifyRight
      )
@@ -158,7 +157,7 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
      .RegisterGlobal(
         "FormatTextJustifyLeft",
         "Justify Left",
-        HotKeyScope.SMBrowser,
+        HotKeyScopes.SMBrowser,
         new HotKey(Key.DbeKatakana),
         JustifyLeft
      )
@@ -167,7 +166,7 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
      .RegisterGlobal(
         "FormatTextJustifyFull",
         "Justify Full",
-        HotKeyScope.SMBrowser,
+        HotKeyScopes.SMBrowser,
         new HotKey(Key.DbeNoCodeInput),
         JustifyFull
       )
@@ -176,7 +175,7 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
      .RegisterGlobal(
         "PastePlainText",
         "Paste Plain Text",
-        HotKeyScope.SMBrowser,
+        HotKeyScopes.SMBrowser,
         new HotKey(Key.V, KeyModifiers.CtrlShift),
         PastePlainText
      )
@@ -184,7 +183,7 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
      .RegisterGlobal(
         "IncreseFontSize",
         "Increase Selected Text Font Size",
-        HotKeyScope.SMBrowser,
+        HotKeyScopes.SMBrowser,
         new HotKey(Key.OemPlus, KeyModifiers.CtrlAltShift),
         IncreaseFontSizeOfSelected
         )
@@ -192,17 +191,18 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
      .RegisterGlobal(
         "DecreaseFontSize",
         "Decrease Selected Text Font Size",
-        HotKeyScope.SMBrowser,
+        HotKeyScopes.SMBrowser,
         new HotKey(Key.OemMinus, KeyModifiers.CtrlAltShift),
         DecreaseFontSizeOfSelected
         );
     }
 
     /// <inheritdoc />
-    protected override void PluginInit()
+    protected override void OnSMStarted(bool wasSMAlreadyStarted)
     {
-      LoadConfig().Wait();
+      LoadConfig();
       RegisterDummyHotkeys();
+      base.OnSMStarted(wasSMAlreadyStarted);
     }
 
     private void Outdent() => Commands.ExecuteCommand(HtmlCommand.Outdent, null);

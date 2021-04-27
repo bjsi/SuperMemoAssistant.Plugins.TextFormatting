@@ -1,17 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.29905.134
+VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution files", "_Solution files", "{A63F6CE7-E4E2-46E0-9349-F967824AD255}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution files", "_Solution files", "{C2E78FE4-A8D4-4827-AF0A-66B644059199}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{81ED2D4B-F3A1-44EB-934B-75B5E4D4A2DC}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{D50B37E0-3A4F-41D1-8A5A-33C0D89DCE9D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperMemoAssistant.Plugins.TextFormatting", "src\SuperMemoAssistant.Plugins.TextFormatting\SuperMemoAssistant.Plugins.TextFormatting.csproj", "{BBCB288A-BD39-4704-8EF9-A020FFAAAC7F}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{9FF0E92B-661D-40BE-9BB2-1A2887E90D76}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperMemoAssistant.Plugins.TextFormatting.Tests", "src\SuperMemoAssistant.Plugins.TextFormatting.Tests\SuperMemoAssistant.Plugins.TextFormatting.Tests.csproj", "{5DC899F7-4A3F-49F7-80D5-FFE4B62B52CD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperMemoAssistant.Plugins.TextFormatting", "src\SuperMemoAssistant.Plugins.TextFormatting\SuperMemoAssistant.Plugins.TextFormatting.csproj", "{5E460800-F725-446C-88E9-EEAADACB0C57}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,35 +18,24 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{BBCB288A-BD39-4704-8EF9-A020FFAAAC7F}.1. Alpha (Debug)|Any CPU.ActiveCfg = Debug|Any CPU
-		{BBCB288A-BD39-4704-8EF9-A020FFAAAC7F}.1. Alpha (Debug)|Any CPU.Build.0 = Debug|Any CPU
-		{BBCB288A-BD39-4704-8EF9-A020FFAAAC7F}.2. Beta (Release)|Any CPU.ActiveCfg = Release|Any CPU
-		{BBCB288A-BD39-4704-8EF9-A020FFAAAC7F}.2. Beta (Release)|Any CPU.Build.0 = Release|Any CPU
-		{BBCB288A-BD39-4704-8EF9-A020FFAAAC7F}.3. Stable (Release)|Any CPU.ActiveCfg = Release|Any CPU
-		{BBCB288A-BD39-4704-8EF9-A020FFAAAC7F}.3. Stable (Release)|Any CPU.Build.0 = Release|Any CPU
-		{BBCB288A-BD39-4704-8EF9-A020FFAAAC7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BBCB288A-BD39-4704-8EF9-A020FFAAAC7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BBCB288A-BD39-4704-8EF9-A020FFAAAC7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BBCB288A-BD39-4704-8EF9-A020FFAAAC7F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5DC899F7-4A3F-49F7-80D5-FFE4B62B52CD}.1. Alpha (Debug)|Any CPU.ActiveCfg = Debug|Any CPU
-		{5DC899F7-4A3F-49F7-80D5-FFE4B62B52CD}.1. Alpha (Debug)|Any CPU.Build.0 = Debug|Any CPU
-		{5DC899F7-4A3F-49F7-80D5-FFE4B62B52CD}.2. Beta (Release)|Any CPU.ActiveCfg = Release|Any CPU
-		{5DC899F7-4A3F-49F7-80D5-FFE4B62B52CD}.2. Beta (Release)|Any CPU.Build.0 = Release|Any CPU
-		{5DC899F7-4A3F-49F7-80D5-FFE4B62B52CD}.3. Stable (Release)|Any CPU.ActiveCfg = Release|Any CPU
-		{5DC899F7-4A3F-49F7-80D5-FFE4B62B52CD}.3. Stable (Release)|Any CPU.Build.0 = Release|Any CPU
-		{5DC899F7-4A3F-49F7-80D5-FFE4B62B52CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5DC899F7-4A3F-49F7-80D5-FFE4B62B52CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5DC899F7-4A3F-49F7-80D5-FFE4B62B52CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5DC899F7-4A3F-49F7-80D5-FFE4B62B52CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E460800-F725-446C-88E9-EEAADACB0C57}.1. Alpha (Debug)|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E460800-F725-446C-88E9-EEAADACB0C57}.1. Alpha (Debug)|Any CPU.Build.0 = Debug|Any CPU
+		{5E460800-F725-446C-88E9-EEAADACB0C57}.2. Beta (Release)|Any CPU.ActiveCfg = Release|Any CPU
+		{5E460800-F725-446C-88E9-EEAADACB0C57}.2. Beta (Release)|Any CPU.Build.0 = Release|Any CPU
+		{5E460800-F725-446C-88E9-EEAADACB0C57}.3. Stable (Release)|Any CPU.ActiveCfg = Release|Any CPU
+		{5E460800-F725-446C-88E9-EEAADACB0C57}.3. Stable (Release)|Any CPU.Build.0 = Release|Any CPU
+		{5E460800-F725-446C-88E9-EEAADACB0C57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E460800-F725-446C-88E9-EEAADACB0C57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E460800-F725-446C-88E9-EEAADACB0C57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E460800-F725-446C-88E9-EEAADACB0C57}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{BBCB288A-BD39-4704-8EF9-A020FFAAAC7F} = {81ED2D4B-F3A1-44EB-934B-75B5E4D4A2DC}
-		{5DC899F7-4A3F-49F7-80D5-FFE4B62B52CD} = {9FF0E92B-661D-40BE-9BB2-1A2887E90D76}
+		{5E460800-F725-446C-88E9-EEAADACB0C57} = {D50B37E0-3A4F-41D1-8A5A-33C0D89DCE9D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {8588CDE5-53B8-4048-830C-2C4B3A329435}
+		SolutionGuid = {4689AEE7-45D0-4622-A3EF-902D4A2270D5}
 	EndGlobalSection
 EndGlobal

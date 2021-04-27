@@ -26,7 +26,7 @@ namespace SuperMemoAssistant.Plugins.TextFormatting
         return htmlCtrl?.GetDocument();
       }
       catch (RemotingException) { }
-      catch (UnauthorizedAccessException) {  }
+      catch (UnauthorizedAccessException) { }
 
       return null;
     }
